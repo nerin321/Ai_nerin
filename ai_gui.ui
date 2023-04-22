@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>489</width>
+    <height>760</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>img/assistant.png</normaloff>img/assistant.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QTextBrowser" name="chat_show">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="minimumSize">
+       <size>
+        <width>471</width>
+        <height>141</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>471</width>
+        <height>141</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="main_box">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="keybord_btn">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>111</width>
+            <height>71</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>icon/keyboard-svgrepo-com.svg</normaloff>icon/keyboard-svgrepo-com.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>60</width>
+            <height>60</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="mic_btn">
+          <property name="maximumSize">
+           <size>
+            <width>111</width>
+            <height>71</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>icon/mic.svg</normaloff>icon/mic.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>60</width>
+            <height>60</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="setting_btn">
+          <property name="maximumSize">
+           <size>
+            <width>121</width>
+            <height>71</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>icon/settings.svg</normaloff>icon/settings.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>60</width>
+            <height>60</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="send_mess">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="text_query">
+          <property name="minimumSize">
+           <size>
+            <width>331</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>331</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>13</pointsize>
+           </font>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="send_btn">
+          <property name="maximumSize">
+           <size>
+            <width>51</width>
+            <height>41</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>icon/send.svg</normaloff>icon/send.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>50</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="setting_box">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QWidget" name="set_void" native="true">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>123</height>
+           </size>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Giọng nói</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="male_rad_btn">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Male</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="female_rad_btn">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Female</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="set_lang" native="true">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>141</height>
+           </size>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Ngôn ngữ</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="eng_rad_btn">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>31</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>English</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="vn_rad_btn">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Vietnamese</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="save_set_btn">
+          <property name="maximumSize">
+           <size>
+            <width>61</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>13</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#save_set_btn{
+	background-color: rgb(0, 255, 127);
+}</string>
+          </property>
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
