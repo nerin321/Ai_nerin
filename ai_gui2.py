@@ -20,7 +20,6 @@ import smtplib
 import requests
 import urllib
 import urllib.request as urllib2
-import tkinter as tk
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
@@ -29,22 +28,9 @@ from gtts import gTTS
 from youtube_search import YoutubeSearch
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-class ChatFrame(tk.Frame):
-    def __init__(self, master=None, **kwargs):
-        super().__init__(master, **kwargs)
-        self.text = tk.Text(self, state="disabled")
-        self.text.tag_configure("left", justify="left")
-        self.text.pack(fill="both", expand= True)
-    
-    def append(self, message):
-        self.text.configure(state="normal")
-        self.text.insert("end", message + "\n")
-        self.text.configure(state="disable")
-
 class Ui_MainWindow(object):
     def __init__(self):
         self.translator = Translator()
-        self.chat_frame = ChatFrame()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -211,6 +197,7 @@ class Ui_MainWindow(object):
         self.male_rad_btn.setChecked(True)
         wikipedia.set_lang('vi')
         path = ChromeDriverManager().install()
+        self.welcome()
 
     # gọi sự kiện
         # chuyển stackedWidget
@@ -227,10 +214,11 @@ class Ui_MainWindow(object):
 
         # mic click
         self.mic_btn.clicked.connect(self.get_audio)
+    
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Nerin"))
         self.label.setText(_translate("MainWindow", "Giọng nói"))
         self.male_rad_btn.setText(_translate("MainWindow", "Male"))
         self.female_rad_btn.setText(_translate("MainWindow", "Female"))
@@ -265,10 +253,6 @@ class Ui_MainWindow(object):
         self.eng_rad_btn.setChecked(True)
         self.vn_rad_btn.setChecked(False)
 
-# thêm khung frame
-    def frame_chat(self, query):
-        self.chat_frame.append(query)
-        self.chat_show.append(query)
 # cài đặt
     # cài đặt giọng nói
     def void_setting(self):
@@ -299,8 +283,7 @@ class Ui_MainWindow(object):
 # nhập và gửi tin nhắn
     def send_message(self):
         query = self.text_query.text()
-        self.chat_show.append(query)
-        self.chat_show.setStyleSheet("color: blue")
+        self.chat_show.append(self.trans("You: " + query))
         self.show_main_box()
         self.text_query.clear()
         self.assistant(query)
@@ -322,52 +305,50 @@ class Ui_MainWindow(object):
             audio = c.listen(source)
         try:
             query = c.recognize_google(audio,language = language)
-            self.chat_show.append(query)
-            self.chat_show.setStyleSheet("color: blue")
+            self.chat_show.append(self.trans("You: " + query))
         except sr.UnknownValueError:
-            self.chat_show.append(self.trans("vui lòng nói lại hoặc nhập lệnh"))
             self.speak("vui lòng nói lại hoặc nhập lệnh")
-            self.chat_show.setStyleSheet("color: red")
         self.assistant(query)
 
 #chuyen van ban thanh am thanh    
-    def speak(self, text):
+    def speak(self, query):
         language = self.language_set()
-        gender =  self.void_setting()
-        print("Nerin: {}".format(text))
-        tts = gTTS(text=text, lang=language, slow=False)
+        # gen =  self.void_setting()
+        # print("Nerin: {}".format(text))
+        self.chat_show.append("Nerin: {}".format(query))
+        tts = gTTS(text=query, lang=language, slow=False)
         tts.save("sound.mp3")
         playsound.playsound("sound.mp3", False)
         os.remove("sound.mp3")
 
 # stop
     def stop(self):
-        self.speak(self.trans("Hẹn gặp lại bạn sau!"))
+        self.speak("Hẹn gặp lại bạn sau!")
 
 #chào hỏi
     def welcome(self):
         hour =  datetime.datetime.now().hour
         if hour >= 6 and hour< 12 :
-            self.speak(self.trans("Chào buổi sáng"))
+            self.speak("Chào buổi sáng")
         elif hour >= 12 and hour < 18 :
-            self.speak(self.trans("Chào buổi chiều"))
+            self.speak("Chào buổi chiều")
         elif hour >= 18 and hour <= 24 :
-            self.speak(self.trans("Chào buổi tối"))
-        self.speak(self.trans('Tôi có thể giúp gì cho bạn?'))
+            self.speak("Chào buổi tối")
+        self.speak('Tôi có thể giúp gì cho bạn?')
 
 #Chức năng hiển thị thời gian
     def get_time(self, query):
         now = datetime.datetime.now()
         if "giờ" in query or "time" in query:
-            self.speak(self.trans('Bây giờ là %d giờ %d phút' % (now.hour, now.minute)))
+            self.speak('Bây giờ là %d giờ %d phút' % (now.hour, now.minute))
         elif "ngày" in query or "day" in query:
-            self.speak(self.trans("Hôm nay là ngày %d tháng %d năm %d" % (now.day, now.month, now.year)))
+            self.speak("Hôm nay là ngày %d tháng %d năm %d" % (now.day, now.month, now.year))
 
 # Chức năng xem dự báo thời tiết
     def current_weather(self):
-        self.speak(self.trans("Bạn muốn xem thời tiết ở đâu ạ."))
+        self.speak("Bạn muốn xem thời tiết ở đâu ạ.")
         ow_url = "http://api.openweathermap.org/data/2.5/weather?"
-        city = get_audio
+        city = self.get_audio()
         if not city:
             pass
         api_key = "fe8d8c65cf345889139d8e545f57819a"
@@ -394,23 +375,23 @@ class Ui_MainWindow(object):
             Độ ẩm là {humidity}%""".format(day = now.day,month = now.month, year= now.year, hourrise = sunrise.hour, minrise = sunrise.minute,
                                             hourset = sunset.hour, minset = sunset.minute, 
                                             temp = current_temperature, pressure = current_pressure, humidity = current_humidity)
-            self.speak(self.trans(content))
+            self.speak(content)
             time.sleep(20)
         else:
-            self.speak(self.trans("Không tìm thấy địa chỉ của bạn"))
-            current_weather()
+            self.speak("Không tìm thấy địa chỉ của bạn")
+            self.current_weather()
 
 #Chức năng tìm định nghĩa trên từ điển wikipedia
     def tell_me_about(self):
         try:
             self.speak("Bạn muốn nghe về gì ạ")
-            text = get_audio
+            text = self.get_audio()
             contents = wikipedia.summary(text).split('\n')
             self.speak(contents[0])
             time.sleep(10)
             for content in contents[1:]:
                 self.speak("Bạn muốn nghe thêm không")
-                ans = get_audio
+                ans = self.get_audio()
                 if "có" not in ans:
                     break    
                 self.self.speak(content)
@@ -421,34 +402,26 @@ class Ui_MainWindow(object):
             self.speak("Bot không định nghĩa được thuật ngữ của bạn. Xin mời bạn nói lại")
             self.tell_me_about()
 
-# bot chat style
-    def bot_chat_style(self, query):
-        self.chat_show.append(query)
-        self.chat_show.setStyleSheet("color: blue")
-
-
 #Tìm kiếm trên gg
     def search_in_google(self, text):
-        self.chat_show.append(self.trans('Bạn muốn tìm cái gì?'))
+        self.chat_show.append('Bạn muốn tìm cái gì?')
         self.speak(self.trans('Bạn muốn tìm cái gì?'))
-        search = get_audio().lower()
+        search = self.get_audio().lower()
         url = f"https://www.google.com.vn/search?q={search}"
         webbrowser.get().open(url)
-        self.chat_show.append(self.trans(f'Đây là kết quả tìm kiếm cho {search} trên google'))
-        self.speak(self.trans(f'Đây là kết quả tìm kiếm cho {search} trên google'))
+        self.speak(f'Đây là kết quả tìm kiếm cho {search} trên google')
 
  #Mở video trên Youtube
     def Youtube(self):
-        self.speak(self.trans('Bạn muốn tìm cái gì?'))
+        self.speak('Bạn muốn tìm cái gì?')
         search = self.get_audio().lower()
         url = f"https://www.youtube.com/search?q={search}"
         webbrowser.get().open(url)
-        self.chat_show.append(self.trans(f'Đây là kết quả tìm kiếm cho {search} trên youtube'))
-        self.speak(self.trans(f'Đây là kết quả tìm kiếm cho {search} trên youtube'))
+        self.speak(f'Đây là kết quả tìm kiếm cho {search} trên youtube')
 
 # thực hiện chương trình
     def assistant(self, query):
-        self.welcome()
+        
         while True:
             
             if "hiện tại" in query:
