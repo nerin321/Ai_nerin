@@ -30,7 +30,12 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def __init__(self):
+        
+        self.MainWindow = QtWidgets.QMainWindow()
+        self.setupUi(self.MainWindow)
+        self.MainWindow.show()
         self.translator = Translator()
+        # self.welcome()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -48,6 +53,7 @@ class Ui_MainWindow(object):
         self.chat_show.setFont(font)
         self.chat_show.setObjectName("chat_show")
         self.verticalLayout_3.addWidget(self.chat_show)
+        # self.chat_show.append("okkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
         self.stackedWidget = QtWidgets.QStackedWidget(parent=self.centralwidget)
         self.stackedWidget.setMinimumSize(QtCore.QSize(471, 141))
         self.stackedWidget.setMaximumSize(QtCore.QSize(471, 141))
@@ -197,7 +203,14 @@ class Ui_MainWindow(object):
         self.male_rad_btn.setChecked(True)
         wikipedia.set_lang('vi')
         path = ChromeDriverManager().install()
-        self.welcome()
+        # self.speak("vui lòng nói lại hoặc nhập lệnh")
+        hour =  datetime.datetime.now().hour
+        if hour >= 6 and hour< 12 :
+            self.speak("Chào buổi sáng, tôi có thể giúp gì cho bạn")
+        elif hour >= 12 and hour < 18 :
+            self.speak("Chào buổi chiều, tôi có thể giúp gì cho bạn")
+        elif hour >= 18 and hour <= 24 :
+            self.speak("Chào buổi tối, tôi có thể giúp gì cho bạn")
 
     # gọi sự kiện
         # chuyển stackedWidget
@@ -214,7 +227,6 @@ class Ui_MainWindow(object):
 
         # mic click
         self.mic_btn.clicked.connect(self.get_audio)
-    
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -313,9 +325,8 @@ class Ui_MainWindow(object):
 #chuyen van ban thanh am thanh    
     def speak(self, query):
         language = self.language_set()
-        # gen =  self.void_setting()
-        # print("Nerin: {}".format(text))
         self.chat_show.append("Nerin: {}".format(query))
+        # time.sleep(15)
         tts = gTTS(text=query, lang=language, slow=False)
         tts.save("sound.mp3")
         playsound.playsound("sound.mp3", False)
@@ -326,15 +337,18 @@ class Ui_MainWindow(object):
         self.speak("Hẹn gặp lại bạn sau!")
 
 #chào hỏi
-    def welcome(self):
-        hour =  datetime.datetime.now().hour
-        if hour >= 6 and hour< 12 :
-            self.speak("Chào buổi sáng")
-        elif hour >= 12 and hour < 18 :
-            self.speak("Chào buổi chiều")
-        elif hour >= 18 and hour <= 24 :
-            self.speak("Chào buổi tối")
-        self.speak('Tôi có thể giúp gì cho bạn?')
+    # def welcome(self):
+    #     hour =  datetime.datetime.now().hour
+    #     # time.sleep(30)
+    #     if hour >= 6 and hour< 12 :
+    #         self.speak("Chào buổi sáng")
+    #     elif hour >= 12 and hour < 18 :
+    #         self.chat_show.append("chao buoi chieu")
+    #         self.speak("Chào buổi chiều")
+    #     elif hour >= 18 and hour <= 24 :
+    #         self.speak("Chào buổi tối")
+    #     time.sleep(5)
+        # self.speak('Tôi có thể giúp gì cho bạn?')
 
 #Chức năng hiển thị thời gian
     def get_time(self, query):
@@ -404,8 +418,7 @@ class Ui_MainWindow(object):
 
 #Tìm kiếm trên gg
     def search_in_google(self, text):
-        self.chat_show.append('Bạn muốn tìm cái gì?')
-        self.speak(self.trans('Bạn muốn tìm cái gì?'))
+        self.speak('Bạn muốn tìm cái gì?')
         search = self.get_audio().lower()
         url = f"https://www.google.com.vn/search?q={search}"
         webbrowser.get().open(url)
@@ -447,8 +460,8 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    # MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    # ui.setupUi(MainWindow)
+    # MainWindow.show()
     sys.exit(app.exec())
