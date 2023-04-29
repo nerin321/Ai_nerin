@@ -249,14 +249,6 @@ class Ui_MainWindow(object):
         self.stackedWidget.setCurrentIndex(2)
     
     # radion click
-    def on_female_rad_btn_clicked(self):
-        self.female_rad_btn.setChecked(True)
-        self.male_rad_btn.setChecked(False)
-
-    def on_male_rad_btn_clicked(self):
-        self.male_rad_btn.setChecked(True)
-        self.female_rad_btn.setChecked(False)
-
     def vn_btn_clicked(self):
         self.vn_rad_btn.setChecked(True)
         self.eng_rad_btn.setChecked(False)
@@ -266,15 +258,6 @@ class Ui_MainWindow(object):
         self.vn_rad_btn.setChecked(False)
 
 # cài đặt
-    # cài đặt giọng nói
-    def void_setting(self):
-        if self.male_rad_btn.isChecked():
-            gender = 'male'
-        else:
-            gender = 'female'  
-
-        return gender  
-    
     # cài đặt ngôn ngữ
     def language_set(self):
         if self.vn_rad_btn.isChecked():
@@ -286,11 +269,8 @@ class Ui_MainWindow(object):
     
     # lưu cài đặt
     def save_setting(self):
-        gender = self.void_setting()
-        language = self.language_set()
         wikipedia.set_lang(self.language_set())
         self.show_main_box()    
-        return gender, language
     
 # nhập và gửi tin nhắn
     def send_message(self):

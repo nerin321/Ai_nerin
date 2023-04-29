@@ -23,7 +23,7 @@ from youtube_search import YoutubeSearch
 #khai bao bien mac dinh
 wikipedia.set_lang('vi')
 language = 'vi'
-path = ChromeDriverManager().install()
+# path = ChromeDriverManager().install()nerin
 
 #chuyen van ban thanh am thanh
 def speak(text):

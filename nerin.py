@@ -47,6 +47,7 @@ def welcome():
         speak("Chào buổi chiều")
     elif hour >= 18 and hour <= 24 :
         speak("Chào buổi tối")
+    time.sleep(2)
     speak('Tôi có thể giúp gì cho bạn?')
 
 #Chức năng hiển thị thời gian
