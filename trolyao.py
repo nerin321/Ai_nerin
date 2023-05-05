@@ -99,13 +99,13 @@ def open_app(text):
         os.startfile('C:\Program Filestuan\Google\Chrome\Application\chrome.exe')
     elif "word" in text:
         speak("Đang mở Microsoft Word")
-        os.startfile('Microsoft Office\Office16.WINWORD.EXE')
+        os.startfile('\\Microsoft Office\Office16.WINWORD.EXE')
     elif "excel" in text:
         speak("Đang mở Microsoft Excel")
-        os.startfile('Microsoft Office\Office16.EXCEL.EXE')
+        os.startfile('\\Microsoft Office\Office16.EXCEL.EXE')
     elif "powerpoint" in text:
         speak("Đang mở Microsoft Powerpoint")
-        os.startfile('Microsoft Office\Office16.POWERPNT.EXE')
+        os.startfile('\\Microsoft Office\Office16.POWERPNT.EXE')
     else:
         speak("Ứng dụng chưa được cài đặt")
 
