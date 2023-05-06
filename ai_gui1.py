@@ -251,13 +251,6 @@ class Ui_MainWindow(object):
         self.show_main_box()   
 
     # nhập và gửi tin nhắn
-    def send_message(self):
-        query = self.text_query.text()
-        self.chat_show.append("You: " + query)
-        self.show_main_box()
-        self.text_query.clear()
-
-    
     def send_query(self):
         query = self.text_query.text()
         self.chat_show.append("You: " + query)
