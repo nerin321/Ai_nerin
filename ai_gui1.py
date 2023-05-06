@@ -191,8 +191,7 @@ class Ui_MainWindow(object):
         self.keybord_btn.clicked.connect(self.show_mess)
         self.setting_btn.clicked.connect(self.show_setting_box)
         self.save_set_btn.clicked.connect(self.save_setting)
-        self.send_btn.clicked.connect(self.send_click)
-
+    
         # radion check
         self.vn_rad_btn.clicked.connect(self.vn_btn_clicked)
         self.eng_rad_btn.clicked.connect(self.eng_btn_clicked)
@@ -200,8 +199,7 @@ class Ui_MainWindow(object):
 
         # click
         self.mic_btn.clicked.connect(self.mic_click)
-
-
+        self.send_btn.clicked.connect(self.send_click)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -289,9 +287,11 @@ class Ui_MainWindow(object):
         if self.flag is None:
             self.flag = 1
             self.assistant()
-        elif self.flag is not None:
+        else:
             self.flag =1
-            self.check()
+            if self.send_btn.clicked.connect(self.mic_click):
+                print("1")
+            # self.check()
         
     
     def send_click(self):
@@ -299,9 +299,9 @@ class Ui_MainWindow(object):
         if self.flag is None:
             self.flag = 2
             self.assistant()
-        elif self.flag is not None:
+        else:
             self.flag =2
-            self.check()
+            # self.check()
         
 
     def check(self):
@@ -316,6 +316,25 @@ class Ui_MainWindow(object):
             self.flag = None
 
         return text1
+    
+    def get_text(self):
+        mic_clicked = False
+        send_clicked = False
+
+        while not (mic_clicked or send_clicked):
+            # Kiểm tra trạng thái của nút Mic
+            if self.mic_btn.clicked.connect(self.mic_click):
+                mic_clicked = True
+                text = self.check()
+            # Kiểm tra trạng thái của nút Send
+            elif self.send_btn.clicked.connect(self.send_clicked):
+                send_clicked = True
+                text = self.check()
+
+            # Cập nhật giao diện và xử lý các sự kiện
+            QtWidgets.QApplication.processEvents()
+        
+        return text
 
     #chuyen am thanh sang van ban
     def get_audio(self):
@@ -348,7 +367,16 @@ class Ui_MainWindow(object):
     def current_weather(self):
         self.speak("Bạn muốn xem thời tiết ở đâu ạ.")
         ow_url = "http://api.openweathermap.org/data/2.5/weather?"
-        city = self.check()
+        city = ""
+        while True:
+            if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+                city = self.check()
+                break
+            elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+                city = self.check()
+                break
+
+            QtWidgets.QApplication.processEvents()
         if not city:
             pass
         api_key = "fe8d8c65cf345889139d8e545f57819a"
@@ -385,10 +413,19 @@ class Ui_MainWindow(object):
     def tell_me_about(self):
         try:
             self.speak("Bạn muốn nghe về gì ạ")
-            text = self.check()
+            text = ""
+            while True:
+                if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+                    text = self.check()
+                    break
+                elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+                    text = self.check()
+                    break
+
+                QtWidgets.QApplication.processEvents()
             contents = wikipedia.summary(text).split('\n')
             self.speak(contents[0])
-            time.sleep(10)
+            time.sleep(20)
             for content in contents[1:]:
                 self.speak("Bạn muốn nghe thêm không")
                 ans = self.get_audio()
@@ -405,9 +442,17 @@ class Ui_MainWindow(object):
     #Tìm kiếm trên gg
     def search_in_google(self):
         self.speak('Bạn muốn tìm cái gì?')
-        while self.t == "":
-            self.mic_btn.clicked.connect(self.mic_click)
-            self.send_btn.clicked.connect(self.send_click)
+        search = ""
+        while True:
+            if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+                search = self.check()
+                break
+            elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+                search = self.check()
+                break
+
+            QtWidgets.QApplication.processEvents()
+    
         search = self.check()
         url = f"https://www.google.com.vn/search?q={search}"
         webbrowser.get().open(url)
@@ -415,24 +460,27 @@ class Ui_MainWindow(object):
 
     #Mở video trên Youtube
     def Youtube(self):
-        self.flag = 3
-        search=""
         self.speak('Bạn muốn tìm cái gì?')
-        while self.flag is not None:
-            self.mic_btn.clicked.connect(self.mic_click)
-            self.send_btn.clicked.connect(self.send_click)
-            search = self.t
-            print("search: ", search)
-        # search = self.check()
+        search = ""
+        while True:
+            print("a")
+            if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+                search = self.check()
+                break
+            elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+                print("2")
+                search = self.check()
+                break
+
+            QtWidgets.QApplication.processEvents()
         url = f"https://www.youtube.com/search?q={search}"
         webbrowser.get().open(url)
         self.speak(f'Đây là kết quả tìm kiếm cho {search} trên youtube')
 
     # goi chuc nang
     def assistant(self):
-        
         query = self.check()
-        self.t = ""
+        self.flag = 0
         if "giờ" in query or "hiện tại" in query or"ngày" in query or"thời gian" in query or"time" in query or"day" in query or"now" in query or"今" in query or"今日" in query or"現在" in query:
             self.get_time(query)
         elif "google" in query:
