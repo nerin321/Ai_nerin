@@ -289,8 +289,6 @@ class Ui_MainWindow(object):
             self.assistant()
         else:
             self.flag =1
-            if self.send_btn.clicked.connect(self.mic_click):
-                print("1")
             # self.check()
         
     
@@ -308,33 +306,13 @@ class Ui_MainWindow(object):
         text1 = ""
         if self.flag == 1:
             text1 = self.get_audio()
-            self.t = text1
             self.flag = None 
         elif self.flag == 2:
             text1 = self.send_query()
-            self.t = text1
             self.flag = None
 
         return text1
-    
-    def get_text(self):
-        mic_clicked = False
-        send_clicked = False
 
-        while not (mic_clicked or send_clicked):
-            # Kiểm tra trạng thái của nút Mic
-            if self.mic_btn.clicked.connect(self.mic_click):
-                mic_clicked = True
-                text = self.check()
-            # Kiểm tra trạng thái của nút Send
-            elif self.send_btn.clicked.connect(self.send_clicked):
-                send_clicked = True
-                text = self.check()
-
-            # Cập nhật giao diện và xử lý các sự kiện
-            QtWidgets.QApplication.processEvents()
-        
-        return text
 
     #chuyen am thanh sang van ban
     def get_audio(self):
@@ -354,9 +332,9 @@ class Ui_MainWindow(object):
     #Chức năng hiển thị thời gian
     def get_time(self, query):
         now = datetime.datetime.now()
-        if "giờ" in query or "time" in query:
+        if "giờ" in query or "time" in query or "何時" in query:
             self.speak('Bây giờ là %d giờ %d phút' % (now.hour, now.minute))
-        elif "ngày" in query or "day" in query:
+        elif "ngày" in query or "day" in query or "今日" in query:
             self.speak("Hôm nay là ngày %d tháng %d năm %d" % (now.day, now.month, now.year)) 
         else:
             self.speak('Bây giờ là %d giờ %d phút' % (now.hour, now.minute))
@@ -463,12 +441,10 @@ class Ui_MainWindow(object):
         self.speak('Bạn muốn tìm cái gì?')
         search = ""
         while True:
-            print("a")
             if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
                 search = self.check()
                 break
             elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
-                print("2")
                 search = self.check()
                 break
 
@@ -481,11 +457,14 @@ class Ui_MainWindow(object):
     def assistant(self):
         query = self.check()
         self.flag = 0
-        if "giờ" in query or "hiện tại" in query or"ngày" in query or"thời gian" in query or"time" in query or"day" in query or"now" in query or"今" in query or"今日" in query or"現在" in query:
+        if "Xin chào" in query or "Chào" in query or "xin chào" in query or "chào" in query or "Hello" in query or "hello" in query or "Hi" in query or "hi" in query or "こんにちは" in query:
+            self.speak("Xin chào bạn! Bạn cần tôi hỗ trợ gì không")
+        elif "giờ" in query or "hiện tại" in query or "ngày" in query or "thời gian" in query or "time" in query or "day" in query or "now" in query or "今" in query or "今日" in query or"現在" in query or "何時" in query:
             self.get_time(query)
-        elif "google" in query:
+            self.flag = None
+        elif "google" in query or "Google" in query:
             self.search_in_google()
-        elif "youtube" in query or "Youtube" in query:
+        elif "youtube" in query or "YouTube" in query:
             self.Youtube()
         elif "thời tiết" in query or "weather" in query or "天気" in query:
             self.current_weather()   
@@ -495,14 +474,19 @@ class Ui_MainWindow(object):
             url = f"https://www.facebook.com"
             webbrowser.get().open(url)
             self.speak('Đã mở facebook')
+            self.flag = None
         elif "zalo" in query or "Zalo" in query:
             url = f"https://chat.zalo.me/?null"
             webbrowser.get().open(url)
             self.speak('Đã mở Zalo')
+            self.flag = None
         elif "thoát" in query or "tạm biệt" in query or "goodbye" in query or "bye" in query:
             self.speak("Hẹn gặp lại bạn sau!")
             time.sleep(2)
             MainWindow.close()
+        else:
+            self.speak("Tôi không hiểu, vui lòng nói hoặc nhập lại!")
+            self.flag = None
 
 if __name__ == "__main__":
     import sys
