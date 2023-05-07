@@ -327,12 +327,15 @@ class Ui_MainWindow(object):
         now = datetime.datetime.now()
         if "giờ" in query or "time" in query or "何時" in query:
             self.speak('Bây giờ là %d giờ %d phút' % (now.hour, now.minute))
+            self.flag = None
         elif "ngày" in query or "day" in query or "今日" in query:
             self.speak("Hôm nay là ngày %d tháng %d năm %d" % (now.day, now.month, now.year)) 
+            self.flag = None
         else:
             self.speak('Bây giờ là %d giờ %d phút' % (now.hour, now.minute))
             time.sleep(1)
             self.speak("Ngày %d tháng %d năm %d" % (now.day, now.month, now.year)) 
+            self.flag = None
 
     # Chức năng xem dự báo thời tiết
     def current_weather(self):
@@ -376,6 +379,7 @@ class Ui_MainWindow(object):
                                             temp = current_temperature, pressure = current_pressure, humidity = current_humidity)
             self.speak(content)
             time.sleep(20)
+            self.speak("Đó là tình hình thời tiết hôm nay!")
         else:
             self.speak("Không tìm thấy địa chỉ của bạn")
             self.current_weather()
@@ -399,8 +403,14 @@ class Ui_MainWindow(object):
             time.sleep(20)
             for content in contents[1:]:
                 self.speak("Bạn muốn nghe thêm không")
-                ans = self.get_audio()
-                if "có" not in ans:
+                while True:
+                    if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+                        ans = self.check()
+                        break
+                    elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+                        ans = self.check()
+                        break
+                if "có" not in ans or "yes" not in ans or "はい" not in ans:
                     break    
                 self.self.speak(content)
                 time.sleep(10)
@@ -424,14 +434,13 @@ class Ui_MainWindow(object):
 
             QtWidgets.QApplication.processEvents()
     
-        search = self.check()
         url = f"https://www.google.com.vn/search?q={search}"
         webbrowser.get().open(url)
         self.speak(f'Đây là kết quả tìm kiếm cho {search} trên google')
 
     #Mở video trên Youtube
     def Youtube(self):
-        self.speak('Bạn muốn tìm cái gì?')
+        self.speak('Bạn muốn xem về cái gì?')
         search = ""
         while True:
             if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
@@ -450,8 +459,9 @@ class Ui_MainWindow(object):
     def assistant(self):
         query = self.check()
         self.flag = 0
-        if "Xin chào" in query or "Chào" in query or "xin chào" in query or "chào" in query or "Hello" in query or "hello" in query or "Hi" in query or "hi" in query or "こんにちは" in query:
-            self.speak("Xin chào bạn! Bạn cần tôi hỗ trợ gì không")
+        if "Xin chào" in query or "Chào" in query or "xin chào" in query or "chào" in query or "Hello" in query or "hello" in query or "こんにちは" in query:
+            self.speak("Xin chào bạn! Bạn cần tôi hỗ trợ gì không?")
+            self.flag = None
         elif "giờ" in query or "hiện tại" in query or "ngày" in query or "thời gian" in query or "time" in query or "day" in query or "now" in query or "今" in query or "今日" in query or"現在" in query or "何時" in query:
             self.get_time(query)
             self.flag = None
