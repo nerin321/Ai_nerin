@@ -10,23 +10,13 @@ import playsound
 import speech_recognition as sr
 import time
 import sys
-import ctypes
 import wikipedia
 import datetime
-import json
-import re
 import webbrowser
-import smtplib
 import requests
-import urllib
-import urllib.request as urllib2
 from googletrans import Translator
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from webdriver_manager.chrome import ChromeDriverManager
 from time import strftime
 from gtts import gTTS
-from youtube_search import YoutubeSearch
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 
@@ -34,12 +24,12 @@ class Ui_MainWindow(object):
     def __init__(self):
         self.translator = Translator()
         self.flag = None
-        self.t=""
+        self.flag_2 = None
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(489, 760)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("img/assistant.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("icon/assistant.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -254,7 +244,6 @@ class Ui_MainWindow(object):
     def send_query(self):
         query = self.text_query.text()
         self.chat_show.append("You: " + query)
-        self.show_main_box()
         self.text_query.clear()
         return query
 
@@ -269,14 +258,13 @@ class Ui_MainWindow(object):
         language = self.language_set()
         text = self.trans(query)
         self.chat_show.append("Nerin: {}".format(text))
-        tts = gTTS(text=text, lang=language, slow=False)
+        tts = gTTS(text=text, lang=language, slow=False, tld='com')
         tts.save("sound.mp3")
         playsound.playsound("sound.mp3", False)
         os.remove("sound.mp3")
     
     # mic
     def mic_click(self):
-        self.show_main_box()
         if self.flag is None:
             self.flag = 1
             self.assistant()
@@ -343,13 +331,15 @@ class Ui_MainWindow(object):
         ow_url = "http://api.openweathermap.org/data/2.5/weather?"
         city = ""
         while True:
-            if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+            if self.flag_2 == 0 and self.flag == 1:
                 city = self.check()
+                self.flag_2 = None
                 break
-            elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+            elif self.flag_2 == 0 and self.flag == 2:
                 city = self.check()
+                self.flag_2 = None
                 break
-
+                
             QtWidgets.QApplication.processEvents()
         if not city:
             pass
@@ -390,25 +380,30 @@ class Ui_MainWindow(object):
             self.speak("Bạn muốn nghe về gì ạ")
             text = ""
             while True:
-                if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+                if self.flag_2 == 0 and self.flag == 1:
                     text = self.check()
+                    self.flag_2 = None
                     break
-                elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+                elif self.flag_2 == 0 and self.flag == 2:
                     text = self.check()
+                    self.flag_2 = None
                     break
 
                 QtWidgets.QApplication.processEvents()
             contents = wikipedia.summary(text).split('\n')
             self.speak(contents[0])
             time.sleep(20)
+            self.flag_2=0
             for content in contents[1:]:
                 self.speak("Bạn muốn nghe thêm không")
                 while True:
-                    if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+                    if self.flag_2 == 0 and self.flag == 1:
                         ans = self.check()
+                        self.flag_2 = None
                         break
-                    elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+                    elif self.flag_2 == 0 and self.flag == 2:
                         ans = self.check()
+                        self.flag_2 = None
                         break
                 if "có" not in ans or "yes" not in ans or "はい" not in ans:
                     break    
@@ -425,11 +420,13 @@ class Ui_MainWindow(object):
         self.speak('Bạn muốn tìm cái gì?')
         search = ""
         while True:
-            if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+            if self.flag_2 == 0 and self.flag == 1:
                 search = self.check()
+                self.flag_2 = None
                 break
-            elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+            elif self.flag_2 == 0 and self.flag == 2:
                 search = self.check()
+                self.flag_2 = None
                 break
 
             QtWidgets.QApplication.processEvents()
@@ -443,11 +440,13 @@ class Ui_MainWindow(object):
         self.speak('Bạn muốn xem về cái gì?')
         search = ""
         while True:
-            if self.mic_btn.clicked.connect(self.mic_click) and self.flag == 1:
+            if self.flag_2 == 0 and self.flag == 1:
                 search = self.check()
+                self.flag_2 = None
                 break
-            elif self.send_btn.clicked.connect(self.send_click) and self.flag == 2:
+            elif self.flag_2 == 0 and self.flag == 2:
                 search = self.check()
+                self.flag_2 = None
                 break
 
             QtWidgets.QApplication.processEvents()
@@ -459,37 +458,42 @@ class Ui_MainWindow(object):
     def assistant(self):
         query = self.check()
         self.flag = 0
-        if "Xin chào" in query or "Chào" in query or "xin chào" in query or "chào" in query or "Hello" in query or "hello" in query or "こんにちは" in query:
-            self.speak("Xin chào bạn! Bạn cần tôi hỗ trợ gì không?")
-            self.flag = None
-        elif "giờ" in query or "hiện tại" in query or "ngày" in query or "thời gian" in query or "time" in query or "day" in query or "now" in query or "今" in query or "今日" in query or"現在" in query or "何時" in query:
-            self.get_time(query)
-            self.flag = None
-        elif "google" in query or "Google" in query:
-            self.search_in_google()
-        elif "youtube" in query or "YouTube" in query:
-            self.Youtube()
-        elif "thời tiết" in query or "weather" in query or "天気" in query:
-            self.current_weather()   
-        elif "định nghĩa" in query or "definition" in query or "定義" in query or "定義文" in query:
-            self.tell_me_about()
-        elif "facebook" in query or "Facebook" in query:
-            url = f"https://www.facebook.com"
-            webbrowser.get().open(url)
-            self.speak('Đã mở facebook')
-            self.flag = None
-        elif "zalo" in query or "Zalo" in query:
-            url = f"https://chat.zalo.me/?null"
-            webbrowser.get().open(url)
-            self.speak('Đã mở Zalo')
-            self.flag = None
-        elif "thoát" in query or "tạm biệt" in query or "goodbye" in query or "bye" in query:
-            self.speak("Hẹn gặp lại bạn sau!")
-            time.sleep(2)
-            MainWindow.close()
+        if query != "":
+            if "Xin chào" in query or "xin chào" in query or "Hello" in query or "hello" in query or "こんにちは" in query:
+                self.speak("Xin chào bạn! Bạn cần tôi hỗ trợ gì không?")
+                self.flag = None
+            elif "giờ" in query or "hiện tại" in query or "ngày" in query or "thời gian" in query or "time" in query or "day" in query or "now" in query or "今" in query or "今日" in query or"現在" in query or "何時" in query:
+                self.get_time(query)
+                self.flag = None
+            elif "google" in query or "Google" in query:
+                self.flag_2 = 0
+                self.search_in_google()
+            elif "youtube" in query or "YouTube" in query:
+                self.flag_2 = 0
+                self.Youtube()
+            elif "thời tiết" in query or "weather" in query or "天気" in query:
+                self.flag_2 = 0
+                self.current_weather()   
+            elif "định nghĩa" in query or "definition" in query or "定義" in query or "定義文" in query:
+                self.flag_2 = 0
+                self.tell_me_about()
+            elif "facebook" in query or "Facebook" in query:
+                url = f"https://www.facebook.com"
+                webbrowser.get().open(url)
+                self.speak('Đã mở facebook')
+                self.flag = None
+            elif "zalo" in query or "Zalo" in query:
+                url = f"https://chat.zalo.me/?null"
+                webbrowser.get().open(url)
+                self.speak('Đã mở Zalo')
+                self.flag = None
+            elif "thoát" in query or "tạm biệt" in query or "goodbye" in query or "bye" in query:
+                self.speak("Hẹn gặp lại bạn sau!")
+                time.sleep(2)
+                MainWindow.close()
         else:
-            self.speak("Tôi không hiểu, vui lòng nói hoặc nhập lại!")
             self.flag = None
+            self.speak("tôi không hiểu, vui lòng nói hoặc nhập lại")
 
 if __name__ == "__main__":
     import sys
